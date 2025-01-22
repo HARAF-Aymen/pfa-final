@@ -47,9 +47,7 @@ public class CommandeService {
         for (Produit produit : produits) {
             int quantiteCommandee = commandeDTO.getQuantiteParProduit().get(produit.getId());
 
-            if (produit.getQuantite() < quantiteCommandee) {
-                throw new RuntimeException("Stock insuffisant pour le produit : " + produit.getNom());
-            }
+
 
             produit.setQuantite(produit.getQuantite() + quantiteCommandee);
             produit.setCommande(savedCommande);
@@ -67,21 +65,29 @@ public class CommandeService {
 
     public Commande updateCommande(Long id,CommandeDTO commandeDTO){
         Commande commande = new Commande();
-
         commande.setDate(commandeDTO.getDate());
 
         Fournisseur fournisseur = fournisseurRepository.findById(commandeDTO.getFournisseurId())
                 .orElseThrow(() -> new RuntimeException("Fournisseur not found with id: " + commandeDTO.getFournisseurId()));
-        ;
         commande.setFournisseur(fournisseur);
 
+        Commande savedCommande = commandeRepository.save(commande);
+
         List<Produit> produits = produitRepository.findAllById(commandeDTO.getProduitIds());
-        for (Produit produit : produits){
-            produit.setCommande(commande);
+        for (Produit produit : produits) {
+            int quantiteCommandee = commandeDTO.getQuantiteParProduit().get(produit.getId());
+
+
+
+            produit.setQuantite(produit.getQuantite() + quantiteCommandee);
+            produit.setCommande(savedCommande);
         }
-        commande.setProduits(produits);
+
         produitRepository.saveAll(produits);
-        return commandeRepository.save(commande);
+
+        savedCommande.setProduits(produits);
+
+        return commandeRepository.save(savedCommande);
 
     }
 

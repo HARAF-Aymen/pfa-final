@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +17,16 @@ public class AchatDTO {
     @Temporal(TemporalType.DATE)
     private Date date;
     private List<Long> produitIds;
+
+    private Map<Long, Integer> quantiteParProduit;
+
+    public Map<Long, Integer> getQuantiteParProduit() {
+        return quantiteParProduit;
+    }
+
+    public void setQuantiteParProduit(Map<Long, Integer> quantiteParProduit) {
+        this.quantiteParProduit = quantiteParProduit;
+    }
 
     public Long getId() {
         return id;

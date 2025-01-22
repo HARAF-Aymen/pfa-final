@@ -38,41 +38,59 @@ public class AchatService {
         System.out.println("Produits récupérés: " + produits);
 
         for (Produit produit : produits) {
+            int quantiteAchetee = achatDTO.getQuantiteParProduit().get(produit.getId());
+
+            if (produit.getQuantite() < quantiteAchetee) {
+                throw new RuntimeException("Stock insuffisant pour le produit : " + produit.getNom());
+            }
+
+            produit.setQuantite(produit.getQuantite() - quantiteAchetee);
+
             produit.setAchat(savedAchat);
-            System.out.println("Produit associé: " + produit.getId());
+
+            System.out.println("Produit mis à jour : ID = " + produit.getId() + ", Nouvelle quantité = " + produit.getQuantite());
         }
 
         produitRepository.saveAll(produits);
-        System.out.println("Produits sauvegardés");
+        System.out.println("Produits sauvegardés avec les nouvelles quantités");
 
         savedAchat.setProduits(produits);
 
-        return savedAchat;
+        return achatRepository.save(savedAchat);
     }
 
 
 
     public Achat updateAchat(Long id, AchatDTO achatDTO) {
-        Achat achat = achatRepository.findById(id).orElseThrow(() -> new RuntimeException("Achat not found"));
-
+        Achat achat = new Achat();
         achat.setDate(achatDTO.getDate());
 
-        if (achat.getProduits() != null) {
-            for (Produit produit : achat.getProduits()) {
-                produit.setAchat(null);
-            }
-        }
+        Achat savedAchat = achatRepository.save(achat);
+        System.out.println("Achat sauvegardé avec ID: " + savedAchat.getId());
 
         List<Produit> produits = produitRepository.findAllById(achatDTO.getProduitIds());
+        System.out.println("Produits récupérés: " + produits);
+
         for (Produit produit : produits) {
-            produit.setAchat(achat);
+            int quantiteAchetee = achatDTO.getQuantiteParProduit().get(produit.getId());
+
+            if (produit.getQuantite() < quantiteAchetee) {
+                throw new RuntimeException("Stock insuffisant pour le produit : " + produit.getNom());
+            }
+
+            produit.setQuantite(produit.getQuantite() - quantiteAchetee);
+
+            produit.setAchat(savedAchat);
+
+            System.out.println("Produit mis à jour : ID = " + produit.getId() + ", Nouvelle quantité = " + produit.getQuantite());
         }
 
         produitRepository.saveAll(produits);
+        System.out.println("Produits sauvegardés avec les nouvelles quantités");
 
-        achat.setProduits(produits);
+        savedAchat.setProduits(produits);
 
-        return achatRepository.save(achat);
+        return achatRepository.save(savedAchat);
     }
 
 
