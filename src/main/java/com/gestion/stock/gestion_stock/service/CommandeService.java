@@ -45,6 +45,13 @@ public class CommandeService {
 
         List<Produit> produits = produitRepository.findAllById(commandeDTO.getProduitIds());
         for (Produit produit : produits) {
+            int quantiteCommandee = commandeDTO.getQuantiteParProduit().get(produit.getId());
+
+            if (produit.getQuantite() < quantiteCommandee) {
+                throw new RuntimeException("Stock insuffisant pour le produit : " + produit.getNom());
+            }
+
+            produit.setQuantite(produit.getQuantite() + quantiteCommandee);
             produit.setCommande(savedCommande);
         }
 
@@ -54,6 +61,7 @@ public class CommandeService {
 
         return commandeRepository.save(savedCommande);
     }
+
 
 
 
