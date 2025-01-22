@@ -1,6 +1,7 @@
 package com.gestion.stock.gestion_stock.controller;
 
 import com.gestion.stock.gestion_stock.entities.Produit;
+import com.gestion.stock.gestion_stock.request.ProduitDTO;
 import com.gestion.stock.gestion_stock.service.ProduitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,13 @@ public class ProduitController {
     }
 
     @PostMapping
-    public Produit createProduit(@RequestBody Produit produit) {
-        return produitService.createProduit(produit);
+    public Produit createProduit(@RequestBody ProduitDTO produitDTO) {
+        return produitService.createProduit(produitDTO);
     }
 
     @PutMapping("/{id}")
-    public Produit updateProduit(@PathVariable Long id, @RequestBody Produit produit){
-        return produitService.updateProduit(id, produit);
+    public Produit updateProduit(@PathVariable Long id, @RequestBody ProduitDTO produitDTO){
+        return produitService.updateProduit(id, produitDTO);
     }
 
     @DeleteMapping("/{id}")

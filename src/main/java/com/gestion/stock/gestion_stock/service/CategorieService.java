@@ -1,7 +1,10 @@
 package com.gestion.stock.gestion_stock.service;
 
 import com.gestion.stock.gestion_stock.Repository.CategorieRepository;
+import com.gestion.stock.gestion_stock.Repository.ProduitRepository;
 import com.gestion.stock.gestion_stock.entities.Categorie;
+import com.gestion.stock.gestion_stock.entities.Produit;
+import com.gestion.stock.gestion_stock.request.CategorieDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ public class CategorieService {
     @Autowired
     private CategorieRepository categorieRepository;
 
+    @Autowired
+    private ProduitRepository produitRepository;
+
     public List<Categorie> getAllCategories(){
         return categorieRepository.findAll();
     }
@@ -21,13 +27,32 @@ public class CategorieService {
         return categorieRepository.findById(id).orElseThrow(() -> new RuntimeException("Catégorie introuvable avec l'id : " +id));
     }
 
-    public Categorie createCategorie(Categorie categorie) {
+    public Categorie createCategorie(CategorieDTO categorieDTO) {
+        Categorie categorie = new Categorie();
+
+
+        categorie.setNom(categorieDTO.getNom());
+        List<Produit> produits = produitRepository.findAllById(categorieDTO.getProduitIds());
+        categorie.setProduits(produits);
+
+        for (Produit produit : produits){
+            produit.setCategorie(categorie);
+        }
+        produitRepository.saveAll(produits);
         return categorieRepository.save(categorie);
     }
 
-    public Categorie updateCategorie(Long id, Categorie categorieDetails) {
-        Categorie categorie = getCategorieById(id);
-        categorie.setNom(categorieDetails.getNom());
+    public Categorie updateCategorie(Long id, CategorieDTO categorieDTO) {
+        Categorie categorie = new Categorie();
+
+        categorie.setNom(categorieDTO.getNom());
+        List<Produit> produits = produitRepository.findAllById(categorieDTO.getProduitIds());
+
+        categorie.setProduits(produits);
+        for (Produit produit : produits){
+            produit.setCategorie(categorie);
+        }
+        produitRepository.saveAll(produits);
         return categorieRepository.save(categorie);
     }
 

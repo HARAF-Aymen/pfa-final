@@ -1,9 +1,20 @@
 package com.gestion.stock.gestion_stock.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "categories")
 public class Categorie {
 
@@ -14,40 +25,9 @@ public class Categorie {
     @Column(nullable = false)
     private String nom;
 
-    public Categorie() {}
+    @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Produit> produits;
 
-    public Categorie(String nom) {
-        this.nom = nom;
-    }
 
-    // Getters et Setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Categorie categorie = (Categorie) o;
-        return Objects.equals(id, categorie.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
