@@ -1,5 +1,6 @@
 package com.gestion.stock.gestion_stock.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -8,42 +9,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Objects;
-
+import java.util.Date;
+import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "produits")
-public class Produit {
+@Getter
+@Setter
+@Table(name = "commandes")
+public class Commande {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom;
-
-
-    private Double prix;
-
-    private int quantite;
-
-    private String description;
-
-    private String imageUrl;
-
     @ManyToOne
     @JsonManagedReference
-    @JoinColumn(name = "categorie_id")
-    private Categorie categorie;
+    @JoinColumn(name="fournisseur_id")
+    private Fournisseur fournisseur;
 
-    @ManyToOne
-    @JsonIgnoreProperties("produit")
-    @JoinColumn(name="commande_id")
-    private Commande commande;
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("commande")
+    private List<Produit> produits;
 
-
-
+    @Temporal(TemporalType.DATE)
+    private Date date;
 }

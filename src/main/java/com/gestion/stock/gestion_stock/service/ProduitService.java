@@ -1,8 +1,10 @@
 package com.gestion.stock.gestion_stock.service;
 
 import com.gestion.stock.gestion_stock.Repository.CategorieRepository;
+import com.gestion.stock.gestion_stock.Repository.CommandeRepository;
 import com.gestion.stock.gestion_stock.Repository.ProduitRepository;
 import com.gestion.stock.gestion_stock.entities.Categorie;
+import com.gestion.stock.gestion_stock.entities.Commande;
 import com.gestion.stock.gestion_stock.entities.Produit;
 import com.gestion.stock.gestion_stock.request.ProduitDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class ProduitService {
     @Autowired
     private CategorieRepository categorieRepository;
 
+    @Autowired
+    private CommandeRepository commandeRepository;
+
     public List<Produit> getAllProduits() {
         return produitRepository.findAll();
     }
@@ -30,6 +35,9 @@ public class ProduitService {
     public Produit createProduit(ProduitDTO produitDTO) {
         Produit produit = new Produit();
 
+        Commande commande = commandeRepository.findById((produitDTO.getCommandeId()))
+                .orElseThrow(() -> new RuntimeException("Commande not found with id: " + produitDTO.getCommandeId()));;
+
         Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + produitDTO.getCategorieId()));;
 
@@ -39,6 +47,7 @@ public class ProduitService {
         produit.setDescription(produitDTO.getDescription());
         produit.setImageUrl(produitDTO.getImageUrl());
         produit.setNom(produitDTO.getNom());
+        produit.setCommande(commande);
 
         return produitRepository.save(produit);
 
@@ -50,6 +59,9 @@ public class ProduitService {
 
         Produit produit = new Produit();
 
+        Commande commande = commandeRepository.findById((produitDTO.getCommandeId()))
+                .orElseThrow(() -> new RuntimeException("Commande not found with id: " + produitDTO.getCommandeId()));;
+
         Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
                 .orElseThrow(() -> new RuntimeException("Client not found with id: " + produitDTO.getCategorieId()));;
 
@@ -59,6 +71,7 @@ public class ProduitService {
         produit.setDescription(produitDTO.getDescription());
         produit.setImageUrl(produitDTO.getImageUrl());
         produit.setNom(produitDTO.getNom());
+        produit.setCommande(commande);
 
         return produitRepository.save(produit);
     }
