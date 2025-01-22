@@ -1,5 +1,6 @@
 package com.gestion.stock.gestion_stock.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -43,6 +44,11 @@ public class Produit {
     @JsonIgnoreProperties("produit")
     @JoinColumn(name="commande_id")
     private Commande commande;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="achat_id")
+    private Achat achat;
 
 
 

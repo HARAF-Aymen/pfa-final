@@ -14,6 +14,15 @@ public class ProduitDTO {
     private String imageUrl;
     private Long categorieId;
     private Long commandeId;
+    private Long achatId;
+
+    public Long getAchatId() {
+        return achatId;
+    }
+
+    public void setAchatId(Long achatId) {
+        this.achatId = achatId;
+    }
 
     public Long getCommandeId() {
         return commandeId;
