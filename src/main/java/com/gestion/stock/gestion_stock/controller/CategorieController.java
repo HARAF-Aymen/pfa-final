@@ -39,6 +39,11 @@ public class CategorieController {
         categorieService.deleteCategorie(id);
     }
 
+    @GetMapping("/count")
+    public long getCategorieCount() {
+        return categorieService.count();
+    }
+
 
 
 

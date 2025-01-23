@@ -73,4 +73,8 @@ public class CategorieService {
     public void deleteCategorie(Long id) {
         categorieRepository.deleteById(id);
     }
+
+    public long count(){
+        return categorieRepository.count();
+    }
 }
