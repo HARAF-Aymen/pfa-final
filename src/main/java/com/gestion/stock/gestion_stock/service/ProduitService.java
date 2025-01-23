@@ -69,29 +69,31 @@ public class ProduitService {
 
 
     public Produit updateProduit(Long id, ProduitDTO produitDTO) {
-        Produit existingProduit = produitRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produit not found with id: " + id));
-
         Produit produit = new Produit();
 
-        Achat achat = achatRepository.findById((produitDTO.getAchatId()))
-                .orElseThrow(() -> new RuntimeException("Commande not found with id: " + produitDTO.getAchatId()));;
+        if (produitDTO.getAchatId() != null) {
+            Achat achat = achatRepository.findById(produitDTO.getAchatId())
+                    .orElseThrow(() -> new RuntimeException("Achat not found with id: " + produitDTO.getAchatId()));
+            produit.setAchat(achat);
+        }
 
+        if (produitDTO.getCommandeId() != null) {
+            Commande commande = commandeRepository.findById(produitDTO.getCommandeId())
+                    .orElseThrow(() -> new RuntimeException("Commande not found with id: " + produitDTO.getCommandeId()));
+            produit.setCommande(commande);
+        }
 
-        Commande commande = commandeRepository.findById((produitDTO.getCommandeId()))
-                .orElseThrow(() -> new RuntimeException("Commande not found with id: " + produitDTO.getCommandeId()));;
+        if (produitDTO.getCategorieId() != null) {
+            Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
+                    .orElseThrow(() -> new RuntimeException("Categorie not found with id: " + produitDTO.getCategorieId()));
+            produit.setCategorie(categorie);
+        }
 
-        Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
-                .orElseThrow(() -> new RuntimeException("Client not found with id: " + produitDTO.getCategorieId()));;
-
-        produit.setCategorie(categorie);
         produit.setPrix(produitDTO.getPrix());
         produit.setQuantite(produitDTO.getQuantité());
         produit.setDescription(produitDTO.getDescription());
         produit.setImageUrl(produitDTO.getImageUrl());
         produit.setNom(produitDTO.getNom());
-        produit.setCommande(commande);
-        produit.setAchat(achat);
 
         return produitRepository.save(produit);
     }
