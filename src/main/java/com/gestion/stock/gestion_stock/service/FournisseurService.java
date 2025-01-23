@@ -34,17 +34,21 @@ public class FournisseurService {
         fournisseur.setEmail(fournisseurDTO.getEmail());
         fournisseur.setAdresse(fournisseurDTO.getAdresse());
         fournisseur.setTelephone(fournisseurDTO.getTelephone());
-        List<Commande> commandes = commandeRepository.findAllById(fournisseurDTO.getCommandesIds());
-        fournisseur.setCommandes(commandes);
-        for (Commande commande: commandes){
-            commande.setFournisseur(fournisseur);
+        if (fournisseurDTO.getCommandesIds() != null && !fournisseurDTO.getCommandesIds().isEmpty()) {
+            List<Commande> commandes = commandeRepository.findAllById(fournisseurDTO.getCommandesIds());
+            if (commandes.size() != fournisseurDTO.getCommandesIds().size()) {
+                throw new RuntimeException("Certaines commandes spécifiées n'existent pas.");
+            }
+            fournisseur.setCommandes(commandes);
+            for (Commande commande : commandes) {
+                commande.setFournisseur(fournisseur);
+            }
+            commandeRepository.saveAll(commandes);
         }
-        commandeRepository.saveAll(commandes);
         return fournisseurRepository.save(fournisseur);
     }
 
     public Fournisseur updateFournisseur(Long id, FournisseurDTO fournisseurDTO){
-
 
         Fournisseur fournisseur = new Fournisseur();
 
@@ -52,12 +56,17 @@ public class FournisseurService {
         fournisseur.setEmail(fournisseurDTO.getEmail());
         fournisseur.setAdresse(fournisseurDTO.getAdresse());
         fournisseur.setTelephone(fournisseurDTO.getTelephone());
-        List<Commande> commandes = commandeRepository.findAllById(fournisseurDTO.getCommandesIds());
-        fournisseur.setCommandes(commandes);
-        for (Commande commande: commandes){
-            commande.setFournisseur(fournisseur);
+        if (fournisseurDTO.getCommandesIds() != null && !fournisseurDTO.getCommandesIds().isEmpty()) {
+            List<Commande> commandes = commandeRepository.findAllById(fournisseurDTO.getCommandesIds());
+            if (commandes.size() != fournisseurDTO.getCommandesIds().size()) {
+                throw new RuntimeException("Certaines commandes spécifiées n'existent pas.");
+            }
+            fournisseur.setCommandes(commandes);
+            for (Commande commande : commandes) {
+                commande.setFournisseur(fournisseur);
+            }
+            commandeRepository.saveAll(commandes);
         }
-        commandeRepository.saveAll(commandes);
         return fournisseurRepository.save(fournisseur);
     }
 
