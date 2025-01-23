@@ -12,7 +12,9 @@ import com.gestion.stock.gestion_stock.request.ProduitDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProduitService {
@@ -121,5 +123,18 @@ public class ProduitService {
 
     public void deleteProduit(Long id) {
         produitRepository.deleteById(id);
+    }
+
+    public Map<String, Long> getProduitsParCategorie() {
+        List<Object[]> result = produitRepository.countProduitsParCategorie();
+        Map<String, Long> produitsParCategorie = new HashMap<>();
+
+        for (Object[] row : result) {
+            String categorieNom = (String) row[0];
+            Long count = (Long) row[1];
+            produitsParCategorie.put(categorieNom, count);
+        }
+
+        return produitsParCategorie;
     }
 }

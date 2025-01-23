@@ -1,5 +1,6 @@
 package com.gestion.stock.gestion_stock.controller;
 
+import com.gestion.stock.gestion_stock.Repository.FournisseurRepository;
 import com.gestion.stock.gestion_stock.entities.Fournisseur;
 import com.gestion.stock.gestion_stock.request.FournisseurDTO;
 import com.gestion.stock.gestion_stock.service.FournisseurService;
@@ -14,6 +15,9 @@ public class FournisseurController {
 
     @Autowired
     private FournisseurService fournisseurService;
+
+    @Autowired
+    private FournisseurRepository fournisseurRepository;
 
     @GetMapping
     public List<Fournisseur> getAllFournisseurs() {
@@ -38,6 +42,11 @@ public class FournisseurController {
     @DeleteMapping("/{id}")
     public void deleteFournisseur(@PathVariable Long id) {
         fournisseurService.deleteFournisseur(id);
+    }
+
+    @GetMapping("/count")
+    public long count(){
+        return fournisseurRepository.count();
     }
 
 }

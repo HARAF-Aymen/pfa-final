@@ -1,5 +1,6 @@
 package com.gestion.stock.gestion_stock.controller;
 
+import com.gestion.stock.gestion_stock.Repository.CategorieRepository;
 import com.gestion.stock.gestion_stock.entities.Categorie;
 import com.gestion.stock.gestion_stock.request.CategorieDTO;
 import com.gestion.stock.gestion_stock.service.CategorieService;
@@ -13,6 +14,9 @@ public class CategorieController {
 
     @Autowired
     private CategorieService categorieService;
+
+    @Autowired
+    private CategorieRepository categorieRepository;
 
     @GetMapping
     public List<Categorie> getAllCategories() {
@@ -38,6 +42,10 @@ public class CategorieController {
     public void deleteCategorie(@PathVariable Long id) {
         categorieService.deleteCategorie(id);
     }
+
+    @GetMapping("/count")
+    public long count(){
+        return categorieRepository.count();}
 
 
 

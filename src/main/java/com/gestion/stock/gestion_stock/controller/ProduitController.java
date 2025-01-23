@@ -1,5 +1,6 @@
 package com.gestion.stock.gestion_stock.controller;
 
+import com.gestion.stock.gestion_stock.Repository.ProduitRepository;
 import com.gestion.stock.gestion_stock.entities.Produit;
 import com.gestion.stock.gestion_stock.request.ProduitDTO;
 import com.gestion.stock.gestion_stock.service.ProduitService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/produits")
@@ -15,6 +17,9 @@ public class ProduitController {
 
     @Autowired
     private ProduitService produitService;
+
+    @Autowired
+    private ProduitRepository produitRepository;
 
     @GetMapping
     public List<Produit> getAllProduits() {
@@ -40,5 +45,15 @@ public class ProduitController {
     public ResponseEntity<?> deleteProduit(@PathVariable Long id) {
         produitService.deleteProduit(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count")
+    public long count(){
+        return produitRepository.count();
+}
+
+    @GetMapping("/prodparcat")
+    public ResponseEntity<Map<String, Long>> getProduitsParCategorie() {
+        return ResponseEntity.ok(produitService.getProduitsParCategorie());
     }
 }
