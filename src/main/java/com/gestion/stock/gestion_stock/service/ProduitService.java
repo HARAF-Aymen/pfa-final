@@ -69,34 +69,55 @@ public class ProduitService {
 
 
     public Produit updateProduit(Long id, ProduitDTO produitDTO) {
-        Produit produit = new Produit();
+        // Fetch the existing product from the database
+        Produit existingProduit = produitRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'id: " + id));
 
+        // Update only the fields provided in the DTO
         if (produitDTO.getAchatId() != null) {
             Achat achat = achatRepository.findById(produitDTO.getAchatId())
                     .orElseThrow(() -> new RuntimeException("Achat not found with id: " + produitDTO.getAchatId()));
-            produit.setAchat(achat);
+            existingProduit.setAchat(achat);
         }
 
         if (produitDTO.getCommandeId() != null) {
             Commande commande = commandeRepository.findById(produitDTO.getCommandeId())
                     .orElseThrow(() -> new RuntimeException("Commande not found with id: " + produitDTO.getCommandeId()));
-            produit.setCommande(commande);
+            existingProduit.setCommande(commande);
         }
 
         if (produitDTO.getCategorieId() != null) {
             Categorie categorie = categorieRepository.findById(produitDTO.getCategorieId())
                     .orElseThrow(() -> new RuntimeException("Categorie not found with id: " + produitDTO.getCategorieId()));
-            produit.setCategorie(categorie);
+            existingProduit.setCategorie(categorie);
         }
 
-        produit.setPrix(produitDTO.getPrix());
-        produit.setQuantite(produitDTO.getQuantité());
-        produit.setDescription(produitDTO.getDescription());
-        produit.setImageUrl(produitDTO.getImageUrl());
-        produit.setNom(produitDTO.getNom());
+        if (produitDTO.getPrix() != null) {
+            existingProduit.setPrix(produitDTO.getPrix());
+        }
 
-        return produitRepository.save(produit);
+        if (produitDTO.getQuantité() != null) {
+            // Add the new quantity to the existing quantity
+            existingProduit.setQuantite(existingProduit.getQuantite() + produitDTO.getQuantité());
+        }
+
+        if (produitDTO.getDescription() != null) {
+            existingProduit.setDescription(produitDTO.getDescription());
+        }
+
+        if (produitDTO.getImageUrl() != null) {
+            existingProduit.setImageUrl(produitDTO.getImageUrl());
+        }
+
+        if (produitDTO.getNom() != null) {
+            existingProduit.setNom(produitDTO.getNom());
+        }
+
+        // Save and return the updated product
+        return produitRepository.save(existingProduit);
     }
+
+
 
     public void deleteProduit(Long id) {
         produitRepository.deleteById(id);

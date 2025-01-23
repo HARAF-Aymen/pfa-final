@@ -9,7 +9,7 @@ public class ProduitDTO {
     private Long id;
     private String nom;
     private Double prix;
-    private int quantité;
+    private Integer  quantité;
     private String description;
     private String imageUrl;
     private Long categorieId;
@@ -44,7 +44,7 @@ public class ProduitDTO {
         return prix;
     }
 
-    public int getQuantité() {
+    public Integer  getQuantité() {
         return quantité;
     }
 
@@ -72,7 +72,7 @@ public class ProduitDTO {
         this.prix = prix;
     }
 
-    public void setQuantité(int quantité) {
+    public void setQuantité(Integer  quantité) {
         this.quantité = quantité;
     }
 
