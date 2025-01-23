@@ -29,30 +29,44 @@ public class CategorieService {
 
     public Categorie createCategorie(CategorieDTO categorieDTO) {
         Categorie categorie = new Categorie();
-
-
         categorie.setNom(categorieDTO.getNom());
-        List<Produit> produits = produitRepository.findAllById(categorieDTO.getProduitIds());
-        categorie.setProduits(produits);
 
-        for (Produit produit : produits){
-            produit.setCategorie(categorie);
+        categorie = categorieRepository.save(categorie);
+
+        if (categorieDTO.getProduitIds() != null && !categorieDTO.getProduitIds().isEmpty()) {
+            List<Produit> produits = produitRepository.findAllById(categorieDTO.getProduitIds());
+
+            for (Produit produit : produits) {
+                produit.setCategorie(categorie);
+            }
+
+            produitRepository.saveAll(produits);
+
+            categorie.setProduits(produits);
         }
-        produitRepository.saveAll(produits);
+
         return categorieRepository.save(categorie);
     }
 
+
     public Categorie updateCategorie(Long id, CategorieDTO categorieDTO) {
         Categorie categorie = new Categorie();
-
         categorie.setNom(categorieDTO.getNom());
-        List<Produit> produits = produitRepository.findAllById(categorieDTO.getProduitIds());
 
-        categorie.setProduits(produits);
-        for (Produit produit : produits){
-            produit.setCategorie(categorie);
+        categorie = categorieRepository.save(categorie);
+
+        if (categorieDTO.getProduitIds() != null && !categorieDTO.getProduitIds().isEmpty()) {
+            List<Produit> produits = produitRepository.findAllById(categorieDTO.getProduitIds());
+
+            for (Produit produit : produits) {
+                produit.setCategorie(categorie);
+            }
+
+            produitRepository.saveAll(produits);
+
+            categorie.setProduits(produits);
         }
-        produitRepository.saveAll(produits);
+
         return categorieRepository.save(categorie);
     }
 
